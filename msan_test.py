@@ -34,41 +34,19 @@ args = {
 dag = DAG(
     dag_id='msan_test',
     default_args=args,
-    schedule_interval='0 0 * * *',
+    schedule_interval=timedelta(days=1),
     dagrun_timeout=timedelta(minutes=60),
 )
 
-run_this_last = DummyOperator(
-    task_id='run_this_last',
-    dag=dag,
-)
+t1 = BashOperator(
+    task_id='ssh_DLTS',
+    bash_command='ssh -i //dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa -p 32523 weouyan@dltseb764000007.redmond.corp.microsoft.com & mkdir from_airflow_test',
+    dag=dag)
 
-# [START howto_operator_bash]
-run_this = BashOperator(
-    task_id='run_after_loop',
-    bash_command='echo 1',
-    dag=dag,
-)
-# [END howto_operator_bash]
+t2 = BashOperator(
+    task_id='sleep',
+    bash_command='sleep 5',
+    retries=3,
+    dag=dag)
 
-run_this >> run_this_last
-
-for i in range(3):
-    task = BashOperator(
-        task_id='runme_' + str(i),
-        bash_command='echo "{{ task_instance_key_str }}" && sleep 1',
-        dag=dag,
-    )
-    task >> run_this
-
-# [START howto_operator_bash_template]
-also_run_this = BashOperator(
-    task_id='also_run_this',
-    bash_command='echo "run_id={{ run_id }} | dag_run={{ dag_run }}"',
-    dag=dag,
-)
-# [END howto_operator_bash_template]
-also_run_this >> run_this_last
-
-if __name__ == "__main__":
-    dag.cli()
+t1>>t2
