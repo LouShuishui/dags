@@ -41,9 +41,9 @@ dag = DAG(
 )
 
 sshHook = SSHHook(
-    remote_host=dltseb764000007.redmond.corp.microsoft.com, 
-    username=weouyan, 
-    key_file=//dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa, 
+    remote_host='dltseb764000007.redmond.corp.microsoft.com', 
+    username='weouyan', 
+    key_file='//dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa', 
     port=32523, 
     timeout=10, 
     keepalive_interval=30)
