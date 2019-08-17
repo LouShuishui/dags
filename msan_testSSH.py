@@ -52,7 +52,7 @@ sshHook = SSHHook(
 
 t1 = SSHOperator(
     task_id="connectionDLTS",
-    bash_command='mkdir fromAirflow',
+    command='mkdir fromAirflow',
     ssh_hook=sshHook,
     dag=dag)
 
