@@ -25,22 +25,34 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
+from airflow.contrib.hooks import SSHHook
+from airflow.contrib.operators.ssh_operator import SSHOperator
 
 args = {
     'owner': 'Airflow',
-    'start_date': airflow.utils.dates.days_ago(2),
+    'start_date': airflow.utils.dates.days_ago(1),
 }
 
 dag = DAG(
-    dag_id='msan_test',
+    dag_id='msan_testSSH',
     default_args=args,
     schedule_interval=timedelta(days=1),
     dagrun_timeout=timedelta(minutes=60),
 )
 
-t1 = BashOperator(
-    task_id='ssh_DLTS',
-    bash_command='ssh -i //dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa -p 32523 weouyan@dltseb764000007.redmond.corp.microsoft.com & mkdir from_airflow_test',
+sshHook = SSHHook(
+    remote_host=dltseb764000007.redmond.corp.microsoft.com, 
+    username=weouyan, 
+    key_file=//dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa, 
+    port=32523, 
+    timeout=10, 
+    keepalive_interval=30)
+
+
+t1 = SSHExecuteOperator(
+    task_id="connectionDLTS",
+    bash_command='mkdir fromAirflow',
+    ssh_hook=sshHook,
     dag=dag)
 
 t2 = BashOperator(
