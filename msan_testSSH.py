@@ -25,8 +25,9 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.contrib.hooks import SSHHook
+from airflow.contrib.hooks.ssh_hook import SSHHook
 from airflow.contrib.operators.ssh_operator import SSHOperator
+
 
 args = {
     'owner': 'Airflow',
@@ -49,7 +50,7 @@ sshHook = SSHHook(
     keepalive_interval=30)
 
 
-t1 = SSHExecuteOperator(
+t1 = SSHOperator(
     task_id="connectionDLTS",
     bash_command='mkdir fromAirflow',
     ssh_hook=sshHook,
