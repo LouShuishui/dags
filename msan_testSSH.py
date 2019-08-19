@@ -1,23 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-
-"""Example DAG demonstrating the usage of the BashOperator."""
+"""Example DAG demonstrating the usage of the SSHOperator."""
 
 from datetime import timedelta
 
@@ -44,7 +25,7 @@ dag = DAG(
 sshHook = SSHHook(
     remote_host='dltseb764000007.redmond.corp.microsoft.com', 
     username='weouyan', 
-    key_file='//dltseastusv100lowprioritystorage.redmond.corp.microsoft.com/weouyan/.ssh/id_rsa', 
+    key_file='/home/bitnami/.ssh/id_rsa_dlts', 
     port=32523, 
     timeout=10, 
     keepalive_interval=30)
@@ -56,10 +37,11 @@ t1 = SSHOperator(
     ssh_hook=sshHook,
     dag=dag)
 
-t2 = BashOperator(
-    task_id='sleep',
-    bash_command='sleep 5',
-    retries=3,
-    dag=dag)
+t2 = SSHOperator(
+    ssh_hook=sshHook,
+    task_id='writeToRemote',
+    command='touch /tmp/test_ssh_in_airflow.txt', # create a file at remote machine
+    dag=dag
+)
 
 t1>>t2
