@@ -1,6 +1,7 @@
 import requests
 import json
-submit_url = "http://dltshub.redmond.corp.microsoft.com/api/dlws/postJob?cluster=Azure-EastUS-V100-LowPriority&Team=ads&Email=weouyan@microsoft.com&Key=871c0ee3"
+submit_url = "http://dltshub-aether.westus2.cloudapp.azure.com/api/dlws/postJob?cluster=Azure-EastUS-V100-LowPriority&Team=ads&Email=weouyan@microsoft.com&Key=871c0ee3"
+
 jobParams = {
     "cmd" : "sleep infinity",
     "dataPath" : "",
