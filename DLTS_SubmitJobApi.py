@@ -17,8 +17,8 @@ default_args = {
 dag = DAG('DLTASubmitJobApi', default_args=default_args, schedule_interval=timedelta(days=1))
 
 t1 = BashOperator(
-    task_id='print_date',
-    bash_command='python dltsPostJobApi.py',
+    task_id='postDLTSJob',
+    bash_command='python /opt/bitnami/airflow/dags/dltsPostJobApi.py',
     dag=dag)
 
 t2 = BashOperator(
