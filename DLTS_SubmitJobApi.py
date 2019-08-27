@@ -18,7 +18,7 @@ dag = DAG('DLTASubmitJobApi', default_args=default_args, schedule_interval=timed
 
 t1 = BashOperator(
     task_id='print_date',
-    bash_command='python dltsPostJobApi',
+    bash_command='python dltsPostJobApi.py',
     dag=dag)
 
 t2 = BashOperator(
