@@ -27,7 +27,7 @@ def post_dlts_job():
 	start_hour = last_hour_datetime[1]
 	
 	jobParams = {
-		"cmd" : "cp core-site.xml $HADOOP_CONF_DIR && cd horizon_check && /NativeAds_Horizon/scripts/run_timeline.sh %s %s && sleep_in" % (
+		"cmd" : "sudo chown -R $USER /NativeAds_Horizon && sudo chown -R $USER $HADOOP_CONF_DIR && cp /data/hadoop-conf/core-site.xml $HADOOP_CONF_DIR && cd horizon_check && /NativeAds_Horizon/scripts/run_timeline.sh %s %s && sleep infinity" % (
         start_date, start_hour),
 		"dataPath" : "",
 		"enabledatapath" : True,
