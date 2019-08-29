@@ -22,8 +22,14 @@ dag = DAG('submit_dlts_job', default_args=default_args, schedule_interval=timede
 def post_dlts_job():
 	submit_url = "http://dltshub-aether.westus2.cloudapp.azure.com/api/dlws/postJob?cluster=Azure-EastUS-V100-LowPriority&Team=ads&Email=weouyan@microsoft.com&Key=871c0ee3"
 
+	lastHourDateTime = datetime.datetime.now() - datetime.timedelta(hours = 1)
+	datetime = lastHourDateTime.strftime('%Y-%m-%d %H').split()
+	start_date = datetime[0]
+	start_hour = datetime[1]
+	
 	jobParams = {
-		"cmd" : "sleep infinity",
+		"cmd" : "cp core-site.xml $HADOOP_CONF_DIR && cd horizon_check && /NativeAds_Horizon/scripts/run_timeline.sh %s %s && sleep_in" % (
+        start_date, start_hour),
 		"dataPath" : "",
 		"enabledatapath" : True,
 		"enablejobpath" : True,
@@ -31,13 +37,13 @@ def post_dlts_job():
 		"env" : "[ ]",
 		"gpuType" : "V100",
 		"hostNetwork" : False,
-		"image": "indexserveregistry.azurecr.io/zhrui/horizon",
+		"image": "indexserveregistry.azurecr.io/nsarangi/horizon_int",
 		"is_interactive": True,
 		"interactivePorts" : "[40001]",
 		"ipython" : True,
 		"isParent" : 1,
 		"isPrivileged" : False,
-		"jobName" : "TestAPISubmission",
+		"jobName" : "TestAPISubmissionRunTimeline",
 		"jobType" : "training",
 		"jobtrainingtype" : "RegularJob",
 		"preemptionAllowed" : False,
